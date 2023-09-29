@@ -2,10 +2,10 @@
 
 namespace BookingApp.Models
 {
-	public class announcement
+	public class Offer
 	{
 		[Key]
-		public int id { get; set; }
+		public int Id { get; set; }
 		[Required]
 		public string title { get; set; }
 		[Required]
