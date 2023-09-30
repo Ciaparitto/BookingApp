@@ -1,16 +1,17 @@
 ﻿using BookingApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace BookingApp.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
+		private readonly AppDbContext _Context;
 
-		public HomeController(ILogger<HomeController> logger)
+		public HomeController(AppDbContext Context)
 		{
-			_logger = logger;
+			_Context = Context;
 		}
 
 		public IActionResult Index()
@@ -27,6 +28,17 @@ namespace BookingApp.Controllers
 		public IActionResult Error()
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+		}
+		public IActionResult DisplayImage(int imageId)
+		{
+			var image = _Context.ImageList.FirstOrDefault(i => i.id == imageId);
+
+			if (image == null)
+			{
+				return NotFound();
+			}
+
+			return File(image.image, "image/jpeg");
 		}
 	}
 }

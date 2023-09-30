@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookingApp.Models
 {
 	public class Offer
 	{
+		
 		[Key]
 		public int Id { get; set; }
 		[Required]
@@ -20,6 +23,9 @@ namespace BookingApp.Models
 		public string City { get; set; }
 		[Required]
 		public string TypeOfFlat { get; set; }
-		
+
+		public List<Image>? Images { get; set; }
+		public UserModel Creator { get; set; } 
+
 	}
 }

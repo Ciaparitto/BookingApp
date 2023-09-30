@@ -1,0 +1,24 @@
+﻿@model	BookingApp.Models.Offer
+@using (Html.BeginForm("AddOffer", "Booking", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+	
+	@Html.ValidationSummary()
+	<p>podaj tytul ogloszenia</p>
+	@Html.TextBoxFor(x => x.title)
+	<p>podaj opis ogloszenie</p>
+	@Html.TextBoxFor(x => x.description)
+	<p>podaj nazwe miasta</p>
+	@Html.TextBoxFor(x => x.City)
+	<p>podaj liczbe pokoi</p>
+	@Html.TextBoxFor(x => x.NumberOfRooms, new {type="number"})
+	<p>podaj typ Dom/Mieszkanie</p>
+	@Html.TextBoxFor(x => x.TypeOfFlat)
+	<p>podaj Cene</p>
+	@Html.TextBoxFor(x => x.price, new {type="number"})
+	<p>dodaj zdjecia<input type="file" name="files" multiple /></p>
+	@Html.HiddenFor(x => x.Id)
+	@Html.HiddenFor(x => x.Creator)
+	@Html.HiddenFor(x => x.Images)
+	<button type="submit">Dodaj</button>
+	
+}

@@ -1,0 +1,13 @@
+﻿@model IEnumerable<BookingApp.Models.Offer>
+@foreach (var offer in Model)
+{
+	@using (Html.BeginForm("CurrentOffer", "Booking", FormMethod.Post))
+	{
+		<p>@offer.title</p>
+		@if (offer.Images[0] != null)
+		{
+			<p>@offer.Images[0]</p>
+		}
+		<button type="submit" id="OfferId" value="@offer.Id" name="OfferId">Przejdz do oferty</button>
+	}
+}

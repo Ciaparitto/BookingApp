@@ -7,9 +7,9 @@ namespace BookingApp.Controllers
 {
 	public class BookingController : Controller
 	{
-		public readonly OfferService _OfferService;
+		public readonly IOfferService _OfferService;
 		public readonly AppDbContext _Context;
-		public BookingController(OfferService OfferService,AppDbContext context) 
+		public BookingController(IOfferService OfferService,AppDbContext context) 
 		{
 			_OfferService = OfferService;	
 			_Context = context;
@@ -61,11 +61,37 @@ namespace BookingApp.Controllers
 			return View();
 		}
 		[HttpPost]
-		public IActionResult AddOffer(Offer offer)
+		public IActionResult AddOffer(Offer offer,List<IFormFile> files)
 		{
-			_OfferService.AddOffer(offer);
-			return View();
-		}
+			if(ModelState.IsValid)
+			{
+
+
+				if (files != null && files.Count > 0)
+				{
+					foreach (var imageFile in HttpContext.Request.Form.Files)
+					{
+						using (var memoryStream = new MemoryStream())
+						{
+							imageFile.CopyTo(memoryStream);
+
+							var image = new Image
+							{
+								image = memoryStream.ToArray(),
+								ContentType = imageFile.ContentType,
+								OfferId = offer.Id
+
+							};
+							_Context.ImageList.Add(image);
+						}
+					}
+				}
+					var id = _OfferService.AddOffer(offer);
+					_Context.SaveChanges();
+					return RedirectToAction("SearchOffer","Booking");
+				}
+				return View();
+			}
 		[HttpPost]
 		public IActionResult DeleteOffer(int OfferId)
 		{

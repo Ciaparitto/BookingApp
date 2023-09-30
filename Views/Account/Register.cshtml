@@ -1,0 +1,12 @@
+﻿@model BookingApp.Models.Register
+@using (Html.BeginForm("register", "Account", FormMethod.Post))
+{
+    @Html.ValidationSummary()
+    <span class="textarealogin">podaj nazwe uzytkownika: </span>
+    @Html.TextBoxFor(x => x.UserName)
+    <span class="textarealogin">podaj adres email: </span>
+    @Html.TextBoxFor(x => x.EmailAdress)
+    <span class="textarealogin">podaj haslo: </span>
+    @Html.PasswordFor(x => x.Password)
+    <button class="button" type="submit">Zarejestruj</button>
+}
