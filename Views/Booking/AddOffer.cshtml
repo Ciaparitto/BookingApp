@@ -16,8 +16,8 @@
 	<p>podaj Cene</p>
 	@Html.TextBoxFor(x => x.price, new {type="number"})
 	<p>dodaj zdjecia<input type="file" name="files" multiple /></p>
-	@Html.HiddenFor(x => x.Id)
-	@Html.HiddenFor(x => x.Creator)
+	
+	@Html.HiddenFor(x => x.CreatorId)
 	@Html.HiddenFor(x => x.Images)
 	<button type="submit">Dodaj</button>
 	

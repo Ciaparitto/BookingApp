@@ -23,7 +23,11 @@ builder.Services.AddDbContext<AppDbContext>(builder =>
 
 builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 {
-	options.Password.RequiredLength = 4;
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 2;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
 }).AddEntityFrameworkStores<AppDbContext>();
 var app = builder.Build();
 
@@ -43,6 +47,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.UseAuthentication();
+
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");

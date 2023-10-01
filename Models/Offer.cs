@@ -6,8 +6,9 @@ namespace BookingApp.Models
 {
 	public class Offer
 	{
-		
-		[Key]
+       
+
+        [Key]
 		public int Id { get; set; }
 		[Required]
 		public string title { get; set; }
@@ -25,7 +26,7 @@ namespace BookingApp.Models
 		public string TypeOfFlat { get; set; }
 
 		public List<Image>? Images { get; set; }
-		public UserModel Creator { get; set; } 
+		public string? CreatorId { get; set; }
 
-	}
+    }
 }

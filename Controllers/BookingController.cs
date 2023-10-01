@@ -1,6 +1,7 @@
 ﻿using BookingApp.Models;
 using BookingApp.Services;
 using BookingApp.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApp.Controllers
@@ -9,10 +10,12 @@ namespace BookingApp.Controllers
 	{
 		public readonly IOfferService _OfferService;
 		public readonly AppDbContext _Context;
-		public BookingController(IOfferService OfferService,AppDbContext context) 
+		private readonly UserManager<UserModel> _userManager;
+		public BookingController(IOfferService OfferService,AppDbContext context, UserManager<UserModel> userManager) 
 		{
 			_OfferService = OfferService;	
 			_Context = context;
+			_userManager = userManager;
 		}
 		public IActionResult Index()
 		{
@@ -65,9 +68,9 @@ namespace BookingApp.Controllers
 		{
 			if(ModelState.IsValid)
 			{
-
-
-				if (files != null && files.Count > 0)
+                var USER = _userManager.GetUserAsync(User).Result;
+                offer.CreatorId = USER.Id;
+                if (files != null && files.Count > 0)
 				{
 					foreach (var imageFile in HttpContext.Request.Form.Files)
 					{
@@ -83,12 +86,14 @@ namespace BookingApp.Controllers
 
 							};
 							_Context.ImageList.Add(image);
-						}
+                           
+                        }
 					}
 				}
+					
 					var id = _OfferService.AddOffer(offer);
 					_Context.SaveChanges();
-					return RedirectToAction("SearchOffer","Booking");
+					return RedirectToAction("index","home");
 				}
 				return View();
 			}
