@@ -13,14 +13,20 @@ namespace BookingApp
 				optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-R5C9EQ0\SQLEXPRESS;Initial Catalog=DbContextBooking;Integrated Security=True");
 			}
 		}
-		public AppDbContext() : base()
-		{
-		}
 		public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
 		{
 
 		}
 		public DbSet<Offer> OfferList { get; set; }
 		public DbSet<Image> ImageList { get; set; }
-	}
-}
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Image>()
+             .HasOne(i => i.Offer)
+             .WithMany(n => n.Images)
+             .HasForeignKey(i => i.OfferId);
+        }
+        }
+    }

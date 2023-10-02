@@ -48,7 +48,7 @@ namespace BookingApp.Migrations
 
                     b.HasIndex("OfferId");
 
-                    b.ToTable("ImageList");
+                    b.ToTable("ImageList", (string)null);
                 });
 
             modelBuilder.Entity("BookingApp.Models.Offer", b =>
@@ -90,7 +90,7 @@ namespace BookingApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OfferList");
+                    b.ToTable("OfferList", (string)null);
                 });
 
             modelBuilder.Entity("BookingApp.Models.UserModel", b =>

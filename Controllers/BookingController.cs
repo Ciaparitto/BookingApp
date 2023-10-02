@@ -70,6 +70,7 @@ namespace BookingApp.Controllers
 			{
                 var USER = _userManager.GetUserAsync(User).Result;
                 offer.CreatorId = USER.Id;
+                var id = _OfferService.AddOffer(offer);
                 if (files != null && files.Count > 0)
 				{
 					foreach (var imageFile in HttpContext.Request.Form.Files)
@@ -91,8 +92,8 @@ namespace BookingApp.Controllers
 					}
 				}
 					
-					var id = _OfferService.AddOffer(offer);
 					_Context.SaveChanges();
+					
 					return RedirectToAction("index","home");
 				}
 				return View();
