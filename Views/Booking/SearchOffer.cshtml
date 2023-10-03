@@ -12,9 +12,13 @@
 	@using (Html.BeginForm("CurrentOffer", "Booking", FormMethod.Post))
 	{
 		<p>@offer.title</p>
-		@if (offer.Images[0] != null)
+		@if (offer.Images != null && offer.Images.Count != 0)
 		{
-			<p>@offer.Images[0]</p>
+			<img class="image " src="@Url.Action("DisplayImage", "Home", new { imageId = offer.Images[0].id })" alt="Obraz" />
+		}
+		else
+		{
+			<img class="image " src="@Url.Action("~/DefaultPhoto.png")" alt="Obraz" />
 		}
 		<button type="submit" id="OfferId" value="@offer.Id" name="OfferId">Przejdz do oferty</button>
 	}

@@ -30,6 +30,16 @@ namespace BookingApp.Controllers
 		public IActionResult SearchOffer()
 		{
 			var OfferList = _OfferService.GetAllOffer();
+			foreach(var offer in OfferList)
+			{
+				foreach(var image in _Context.ImageList)
+				{
+					if(image.OfferId == offer.Id)
+					{
+						offer.Images.Add(image);
+					}
+				}
+			}
 			return View(OfferList);
 		}
 		[HttpPost]
@@ -52,10 +62,17 @@ namespace BookingApp.Controllers
 			}
 			return View(GoodOffers);
 		}
-		[HttpGet]
+		
 		public IActionResult CurrentOffer(int OfferId) 
 		{
 			var Offer = _Context.OfferList.FirstOrDefault(x => x.Id == OfferId);
+			foreach(var image in _Context.ImageList)
+			{
+				if(image.id == Offer.Id)
+				{
+					Offer.Images.Add(image);
+				}
+			}
 			return View(Offer);
 		}
 		[HttpGet]
@@ -87,11 +104,12 @@ namespace BookingApp.Controllers
 
 							};
 							_Context.ImageList.Add(image);
+							offer.Images.Add(image);
                            
                         }
 					}
 				}
-					
+				
 					_Context.SaveChanges();
 					
 					return RedirectToAction("index","home");

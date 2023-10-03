@@ -1,7 +1,14 @@
 ﻿@model BookingApp.Models.Offer
 <p>@Model.title</p>
 <p>@Model.price</p>
+@if(Model.Images != null)
+{
+
 @foreach(var image in Model.Images)
 {
 	<img class="image " src="@Url.Action("DisplayImage", "Home", new { imageId = image.id })" alt="Obraz" />
+}
+}else{
+	<img src="~/images/DefaultPhoto.png" alt="Obraz" />
+
 }
