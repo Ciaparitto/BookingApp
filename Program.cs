@@ -2,15 +2,17 @@ using BookingApp;
 using BookingApp.Models;
 using BookingApp.Services;
 using BookingApp.Services.Interfaces;
+using BookingApp.Sieve;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Sieve.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<ISieveProcessor, AppSieveProcessor>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.Configure<FormOptions>(options =>
 {

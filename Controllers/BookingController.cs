@@ -45,20 +45,42 @@ namespace BookingApp.Controllers
 		[HttpPost]
 		public IActionResult SearchCurrentOffer(string KeyWords,int RoomsNumber,string City,int MaxPrice,int MinPrice,string TypeOfFlat)
 		{
-			var offersWithKeyWord = _Context.OfferList.Where(x => x.title.Contains(KeyWords)).ToList();
+			var offersWithKeyWord = new List<Offer>();
+			
+			if (KeyWords != null)
+			{
+				offersWithKeyWord = _Context.OfferList.Where(x => x.title.Contains(KeyWords)).ToList();
+			}
+			else
+			{
+				offersWithKeyWord = _Context.OfferList.ToList();
+			}
 			var GoodOffers = new List<Offer>();
+			var wyniki = _Context.OfferList.AsQueryable();
 			foreach (var offer in offersWithKeyWord)
 			{
-				if
-					(
-					(offer.price >= MinPrice && offer.price <= MaxPrice)&&
-					offer.NumberOfRooms == RoomsNumber &&
-					offer.City == City &&
-					offer.TypeOfFlat == TypeOfFlat
-					)
+				if (RoomsNumber != null)
 				{
-					GoodOffers.Add(offer);
+					wyniki = wyniki.Where(x => x.NumberOfRooms == RoomsNumber);
 				}
+				if (City != null)
+				{
+					wyniki = wyniki.Where(x => x.City == City);
+				}
+				if (MinPrice != null)
+				{
+					wyniki = wyniki.Where(x => x.price >= MinPrice);
+				}
+				if (MaxPrice != null)
+				{
+					wyniki = wyniki.Where(x => x.price <= MaxPrice);
+				}
+				if (TypeOfFlat != null)
+				{
+					wyniki = wyniki.Where(x => x.TypeOfFlat == TypeOfFlat);
+				}
+				GoodOffers = wyniki.ToList();
+
 			}
 			return View(GoodOffers);
 		}

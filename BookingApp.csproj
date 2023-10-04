@@ -9,16 +9,12 @@
   <ItemGroup>
     <Compile Remove="Nowy folder1\**" />
     <Compile Remove="Nowy folder2\**" />
-    <Compile Remove="Nowy folder\**" />
     <Content Remove="Nowy folder1\**" />
     <Content Remove="Nowy folder2\**" />
-    <Content Remove="Nowy folder\**" />
     <EmbeddedResource Remove="Nowy folder1\**" />
     <EmbeddedResource Remove="Nowy folder2\**" />
-    <EmbeddedResource Remove="Nowy folder\**" />
     <None Remove="Nowy folder1\**" />
     <None Remove="Nowy folder2\**" />
-    <None Remove="Nowy folder\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +29,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Sieve" Version="2.5.5" />
   </ItemGroup>
 
 </Project>

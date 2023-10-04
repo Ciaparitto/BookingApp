@@ -1,10 +1,13 @@
 ﻿@model IEnumerable<BookingApp.Models.Offer>
 @using (Html.BeginForm("SearchCurrentOffer", "Booking", FormMethod.Post))
 	{
+@Html.ValidationSummary()
 <p>pokoj liczbe pokoi<input type="number" name="RoomsNumber" /></p>
 <p>podaj cene minimalna <input type="number" name="MinPrice" /></p>
 <p>podaj cene maksymalna <input type="number" name="MaxPrice" /></p>
 <p>podaj miasto<input type="text" name="City" /></p>
+<p>Dom/Mieszkanie <input type="text" name="TypeOfFlat" /> </p>
+	<p>Szukaj <input type="text" name="KeyWords" /> </p>
 <button type="submit">Szukaj</button>
 	}
 @foreach(var offer in Model)
@@ -18,7 +21,7 @@
 		}
 		else
 		{
-			<img class="image " src="@Url.Action("~/DefaultPhoto.png")" alt="Obraz" />
+			<img src="~/images/DefaultPhoto.png" alt="Obraz" />
 		}
 		<button type="submit" id="OfferId" value="@offer.Id" name="OfferId">Przejdz do oferty</button>
 	}
