@@ -1,8 +1,13 @@
 ﻿using BookingApp.Models;
 using BookingApp.Services;
 using BookingApp.Services.Interfaces;
+using BookingApp.Sieve;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Sieve.Models;
+using Sieve.Services;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BookingApp.Controllers
 {
@@ -43,46 +48,21 @@ namespace BookingApp.Controllers
 			return View(OfferList);
 		}
 		[HttpPost]
-		public IActionResult SearchCurrentOffer(string KeyWords,int RoomsNumber,string City,int MaxPrice,int MinPrice,string TypeOfFlat)
+		public async Task<IActionResult> SearchCurrentOffer([FromBody] SieveModel query, ISieveProcessor sieveProcessor, AppDbContext DbContext)
 		{
-			var offersWithKeyWord = new List<Offer>();
-			
-			if (KeyWords != null)
-			{
-				offersWithKeyWord = _Context.OfferList.Where(x => x.title.Contains(KeyWords)).ToList();
-			}
-			else
-			{
-				offersWithKeyWord = _Context.OfferList.ToList();
-			}
-			var GoodOffers = new List<Offer>();
-			var wyniki = _Context.OfferList.AsQueryable();
-			foreach (var offer in offersWithKeyWord)
-			{
-				if (RoomsNumber != null)
-				{
-					wyniki = wyniki.Where(x => x.NumberOfRooms == RoomsNumber);
-				}
-				if (City != null)
-				{
-					wyniki = wyniki.Where(x => x.City == City);
-				}
-				if (MinPrice != null)
-				{
-					wyniki = wyniki.Where(x => x.price >= MinPrice);
-				}
-				if (MaxPrice != null)
-				{
-					wyniki = wyniki.Where(x => x.price <= MaxPrice);
-				}
-				if (TypeOfFlat != null)
-				{
-					wyniki = wyniki.Where(x => x.TypeOfFlat == TypeOfFlat);
-				}
-				GoodOffers = wyniki.ToList();
+			var offers = DbContext.OfferList
+			.AsQueryable();
 
-			}
-			return View(GoodOffers);
+			var Goodoffers = await sieveProcessor
+			.Apply(query, offers)
+			.ToListAsync();
+
+			var totalcount = await sieveProcessor
+			.Apply(query, offers, applyPagination: false, applySorting: false)
+			.CountAsync();
+
+			var result = new PagedResult<Offer>(Goodoffers, totalcount, query.PageSize.Value, query.Page.Value);
+			return View(Goodoffers);
 		}
 		
 		public IActionResult CurrentOffer(int OfferId) 

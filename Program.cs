@@ -5,8 +5,12 @@ using BookingApp.Services.Interfaces;
 using BookingApp.Sieve;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.EntityFrameworkCore;
+using Sieve.Models;
 using Sieve.Services;
+using Sieve;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +47,22 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.MapPost("home/sieve", async ([FromBody] SieveModel query, ISieveProcessor sieveProcessor, AppDbContext DbContext) =>
+{
+	var offers = DbContext.OfferList
+		.AsQueryable();
 
+	var Goodoffers = await sieveProcessor
+	.Apply(query, offers)
+	.ToListAsync();
+
+	var totalcount = await sieveProcessor
+	.Apply(query, offers, applyPagination: false, applySorting:false)
+	.CountAsync();
+
+	var result = new PagedResult<Offer>(Goodoffers, totalcount, query.PageSize.Value, query.Page.Value);
+	return result;
+});
 
 app.UseRouting();
 
