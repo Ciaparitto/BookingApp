@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ISieveProcessor, AppSieveProcessor>();
 builder.Services.AddScoped<IOfferService, OfferService>();
+builder.Services.AddSingleton<AppSieveProcessor>();
 builder.Services.Configure<FormOptions>(options =>
 {
 	options.MultipartBodyLengthLimit = 104857600;

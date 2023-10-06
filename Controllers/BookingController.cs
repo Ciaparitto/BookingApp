@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sieve.Models;
 using Sieve.Services;
+using System.Linq.Dynamic.Core;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BookingApp.Controllers
@@ -14,10 +15,12 @@ namespace BookingApp.Controllers
 	public class BookingController : Controller
 	{
 		public readonly IOfferService _OfferService;
+		private readonly ISieveProcessor _sieveProcessor;
 		public readonly AppDbContext _Context;
 		private readonly UserManager<UserModel> _userManager;
-		public BookingController(IOfferService OfferService,AppDbContext context, UserManager<UserModel> userManager) 
+		public BookingController(IOfferService OfferService,AppDbContext context, UserManager<UserModel> userManager,ISieveProcessor sieveProcessor) 
 		{
+			_sieveProcessor = sieveProcessor;
 			_OfferService = OfferService;	
 			_Context = context;
 			_userManager = userManager;
@@ -47,13 +50,15 @@ namespace BookingApp.Controllers
 			}
 			return View(OfferList);
 		}
-		[HttpPost]
-		public async Task<IActionResult> SearchCurrentOffer([FromBody] SieveModel query, ISieveProcessor sieveProcessor, AppDbContext DbContext)
+		[HttpGet]
+		public async Task<IActionResult> SearchCurrentOffer([FromQuery] SieveModel query, [FromServices] ISieveProcessor sieveProcessor)
 		{
-			var offers = DbContext.OfferList
+
+	
+			var offers = _Context.OfferList
 			.AsQueryable();
 
-			var Goodoffers = await sieveProcessor
+			var Goodoffers = sieveProcessor
 			.Apply(query, offers)
 			.ToListAsync();
 
@@ -61,8 +66,8 @@ namespace BookingApp.Controllers
 			.Apply(query, offers, applyPagination: false, applySorting: false)
 			.CountAsync();
 
-			var result = new PagedResult<Offer>(Goodoffers, totalcount, query.PageSize.Value, query.Page.Value);
-			return View(Goodoffers);
+			//var result = new PagedResult<Offer>(Goodoffers, totalcount, query.PageSize.Value, query.Page.Value);
+			return Ok(Goodoffers);
 		}
 		
 		public IActionResult CurrentOffer(int OfferId) 
