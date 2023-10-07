@@ -12,6 +12,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BookingApp.Controllers
 {
+	
 	public class BookingController : Controller
 	{
 		public readonly IOfferService _OfferService;
@@ -51,23 +52,44 @@ namespace BookingApp.Controllers
 			return View(OfferList);
 		}
 		[HttpGet]
-		public async Task<IActionResult> SearchCurrentOffer([FromQuery] SieveModel query, [FromServices] ISieveProcessor sieveProcessor)
+		public IActionResult SearchCurrentOffer([FromQuery] int RoomsNumber, [FromQuery] string MinPrice, [FromQuery] string MaxPrice, [FromQuery] string City, [FromQuery] string TypeOfFlat, [FromQuery] string KeyWords)
 		{
+			
+			var offers = _Context.OfferList.AsQueryable();
 
-	
-			var offers = _Context.OfferList
-			.AsQueryable();
+			if (RoomsNumber != null)
+			{
+				offers = offers.Where(o => o.NumberOfRooms == RoomsNumber);
+			}
+			if (TypeOfFlat != null)
+			{
+				offers = offers.Where(o => o.TypeOfFlat == TypeOfFlat);
+			}
+			if (MaxPrice != null)
+			{
+				offers = offers.Where(o => o.price <= int.Parse(MaxPrice));
+			}
+			if (MinPrice != null)
+			{
+				offers = offers.Where(o => o.price >= int.Parse(MinPrice));
+			}
+		
+			if (City != null)
+			{
+				offers = offers.Where(o => o.City == City);
+			}
 
-			var Goodoffers = sieveProcessor
-			.Apply(query, offers)
-			.ToListAsync();
+			/*
+			  if (KeyWords != null)
+				{
+					offers = offers.Where(x => x.title.Contains(KeyWords));
+				}
 
-			var totalcount = await sieveProcessor
-			.Apply(query, offers, applyPagination: false, applySorting: false)
-			.CountAsync();
-
-			//var result = new PagedResult<Offer>(Goodoffers, totalcount, query.PageSize.Value, query.Page.Value);
-			return Ok(Goodoffers);
+			
+			
+			
+			*/
+			return View(offers);
 		}
 		
 		public IActionResult CurrentOffer(int OfferId) 

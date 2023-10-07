@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<BookingApp.Models.Offer>
-@using (Html.BeginForm("SearchCurrentOffer", "Booking", FormMethod.Post))
+@using (Html.BeginForm("SearchCurrentOffer", "Booking", FormMethod.Get))
 	{
 @Html.ValidationSummary()
 <p>pokoj liczbe pokoi<input type="number" name="RoomsNumber" /></p>
