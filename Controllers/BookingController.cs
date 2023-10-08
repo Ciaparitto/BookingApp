@@ -56,6 +56,10 @@ namespace BookingApp.Controllers
 		{
 			
 			var offers = _Context.OfferList.AsQueryable();
+			if (KeyWords != null)
+			{
+				offers = offers.Where(x => x.title.Contains(KeyWords));
+			}
 
 			if (RoomsNumber != null)
 			{
@@ -79,25 +83,20 @@ namespace BookingApp.Controllers
 				offers = offers.Where(o => o.City == City);
 			}
 
-			/*
-			  if (KeyWords != null)
-				{
-					offers = offers.Where(x => x.title.Contains(KeyWords));
-				}
+			 
 
 			
 			
-			
-			*/
 			return View(offers);
 		}
 		
-		public IActionResult CurrentOffer(int OfferId) 
+		public IActionResult CurrentOffer(int OfferId,bool dateIsFree) 
 		{
-			var Offer = _Context.OfferList.FirstOrDefault(x => x.Id == OfferId);
+			ViewBag.IsFree = dateIsFree;
+			var Offer = _OfferService.GetOfferById(OfferId);
 			foreach(var image in _Context.ImageList)
 			{
-				if(image.id == Offer.Id)
+				if(image.OfferId == Offer.Id)
 				{
 					Offer.Images.Add(image);
 				}
@@ -150,6 +149,37 @@ namespace BookingApp.Controllers
 		{
 			_OfferService.RemoveOffer(OfferId);
 			return RedirectToAction("SearchOffer", "Booking");
+		}
+		[HttpGet]
+		public IActionResult CheckDate(int OfferId,DateTime startDate,DateTime endDate)
+		{
+			var bookingList = _Context.BookingList.Where(x => x.offerId == OfferId).ToList();
+			var dateList = new List<DateTime>();
+			var BookingDateList = new List<DateTime>();
+			while (startDate <= endDate)
+			{
+				dateList.Add(startDate);
+				startDate = startDate.AddDays(1);
+			}
+			foreach(var date in bookingList)
+			{
+				while (date.startDate <= date.endDate)
+				{
+					BookingDateList.Add(date.startDate);
+					date.startDate = date.startDate.AddDays(1);
+				}
+			}
+			foreach (var date in BookingDateList)
+			{
+				foreach(var dateL in dateList)
+				{
+					if (date.Day == dateL.Day  && date.Month == dateL.Month && date.Year == dateL.Year)
+					{
+						return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId, dateIsFree = false });
+					}
+				}
+			}
+			return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId, dateIsFree = true });
 		}
 	}
 }

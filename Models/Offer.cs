@@ -32,6 +32,7 @@ namespace BookingApp.Models
 		[Required]
 		[Sieve(CanFilter = true)]
 		public string TypeOfFlat { get; set; }
+		
 
 		public List<Image>? Images { get; set; }
 		public string? CreatorId { get; set; }

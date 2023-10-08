@@ -19,6 +19,7 @@ namespace BookingApp
 		}
 		public DbSet<Offer> OfferList { get; set; }
 		public DbSet<Image> ImageList { get; set; }
+		public DbSet<Booking> BookingList { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
