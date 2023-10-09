@@ -52,19 +52,17 @@ namespace BookingApp.Controllers
 			return View(OfferList);
 		}
 		[HttpGet]
-		public IActionResult SearchCurrentOffer([FromQuery] int RoomsNumber, [FromQuery] string MinPrice, [FromQuery] string MaxPrice, [FromQuery] string City, [FromQuery] string TypeOfFlat, [FromQuery] string KeyWords)
+		public IActionResult SearchCurrentOffer([FromQuery] string RoomsNumber, [FromQuery] string MinPrice, [FromQuery] string MaxPrice, [FromQuery] string City, [FromQuery] string TypeOfFlat, [FromQuery] string KeyWords)
 		{
 			
+
 			var offers = _Context.OfferList.AsQueryable();
 			if (KeyWords != null)
 			{
 				offers = offers.Where(x => x.title.Contains(KeyWords));
 			}
-
-			if (RoomsNumber != null)
-			{
-				offers = offers.Where(o => o.NumberOfRooms == RoomsNumber);
-			}
+			
+			
 			if (TypeOfFlat != null)
 			{
 				offers = offers.Where(o => o.TypeOfFlat == TypeOfFlat);
@@ -83,15 +81,21 @@ namespace BookingApp.Controllers
 				offers = offers.Where(o => o.City == City);
 			}
 
-			 
+			if (RoomsNumber != null)
+			{
+				offers = offers.Where(o => o.NumberOfRooms == int.Parse(RoomsNumber));
+			}
 
-			
-			
+
+
 			return View(offers);
 		}
 		
-		public IActionResult CurrentOffer(int OfferId,bool dateIsFree) 
+		public IActionResult CurrentOffer(int OfferId,bool dateIsFree,bool DateIsChecked, DateTime startDate, DateTime endDate) 
 		{
+			ViewBag.StartDate = startDate;
+			ViewBag.EndDate = endDate;
+			ViewBag.DateIsChecked = DateIsChecked;
 			ViewBag.IsFree = dateIsFree;
 			var Offer = _OfferService.GetOfferById(OfferId);
 			foreach(var image in _Context.ImageList)
@@ -154,6 +158,7 @@ namespace BookingApp.Controllers
 		public IActionResult CheckDate(int OfferId,DateTime startDate,DateTime endDate)
 		{
 			var bookingList = _Context.BookingList.Where(x => x.offerId == OfferId).ToList();
+			
 			var dateList = new List<DateTime>();
 			var BookingDateList = new List<DateTime>();
 			while (startDate <= endDate)
@@ -175,11 +180,31 @@ namespace BookingApp.Controllers
 				{
 					if (date.Day == dateL.Day  && date.Month == dateL.Month && date.Year == dateL.Year)
 					{
-						return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId, dateIsFree = false });
+						return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId, dateIsFree = false, DateIsChecked = true , startDate  = startDate,endDate = endDate});
 					}
 				}
 			}
-			return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId, dateIsFree = true });
+			return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId, dateIsFree = true,DateIsChecked = true, startDate = startDate, endDate = endDate });
+		}
+		[HttpPost]
+		public IActionResult AddBooking(DateTime startDate, DateTime endDate,int OfferId )
+		{
+			var USER = _userManager.GetUserAsync(User).Result;
+			if (ModelState.IsValid)
+			{ 
+				var booking = new Booking
+					{
+					startDate = startDate,
+					endDate = endDate,
+					offerId = OfferId,
+					UserId = USER.Id
+				
+					};
+				var Id = _OfferService.AddBooking(booking);
+				return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId, dateIsFree = false, DateIsChecked = false });
+
+			}
+			return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId, dateIsFree = false, DateIsChecked = false });
 		}
 	}
 }

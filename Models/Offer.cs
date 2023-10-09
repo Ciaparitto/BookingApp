@@ -12,25 +12,19 @@ namespace BookingApp.Models
         [Key]
 		public int Id { get; set; }
 		[Required]
-		[Sieve(CanFilter = true)]
-		public string title { get; set; }
-	
+		public string title { get; set; }	
 		[Required]
 		public string description { get; set; }
-		[Required]
-		[Sieve(CanFilter = true, CanSort = true)]
+		[Required]	
 		public DateTime? AddDate { get; set; } = DateTime.Now;
 		[Required]
-		[Sieve(CanFilter = true, CanSort = true)]
 		public float price { get; set; }
 		[Required]
 		[Sieve(CanFilter = true)]
 		public int NumberOfRooms {get; set; }
 		[Required]
-		[Sieve(CanFilter = true)]
 		public string City { get; set; }
 		[Required]
-		[Sieve(CanFilter = true)]
 		public string TypeOfFlat { get; set; }
 		
 

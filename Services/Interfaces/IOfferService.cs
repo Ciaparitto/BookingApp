@@ -8,5 +8,6 @@ namespace BookingApp.Services.Interfaces
 		List<Offer> GetAllOffer();
 		int AddOffer(Offer offer);
 		int RemoveOffer(int id);
+		int AddBooking(Booking booking);
 	}
 }

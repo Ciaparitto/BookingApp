@@ -4,22 +4,41 @@
 }
 <p>@Model.title</p>
 <p>@Model.price</p>
-@using(Html.BeginForm("checkdate","booking", FormMethod.Get))
+@if (ViewBag.DateIsChecked == false)
 {
-	@Html.ValidationSummary()
 
-<p>wybierz date rozpoczecia<input type="date" name="startDate" /></p>
-<p>wybierz date zakonczenia<input type="date" name="endDate" /></p>
-<input type="hidden" name="OfferId" value="@Model.Id"/>
-<button type="submit">sprawdz daty</button>
+
+	@using (Html.BeginForm("checkdate", "booking", FormMethod.Get))
+	{
+		@Html.ValidationSummary()
+
+		<p>wybierz date rozpoczecia<input type="date" name="startDate" /></p>
+		<p>wybierz date zakonczenia<input type="date" name="endDate" /></p>
+		<input type="hidden" name="OfferId" value="@Model.Id"/>
+		<button type="submit">sprawdz daty</button>
+	}
 }
-@if(ViewBag.IsFree == true)
+@if (ViewBag.DateIsChecked)
 {
-	<p>daty sa wolne</p>
-}
-@if (ViewBag.IsFree == false)
-{
-	<p>daty nie sa wolne</p>
+
+
+	@if (ViewBag.IsFree)
+	{
+		<p>daty sa wolne</p>
+		@using (Html.BeginForm("AddBooking", "booking", FormMethod.Post))
+		{
+		@Html.ValidationSummary()
+			<p>rezerwoj @Model.title w dniach od @ViewBag.StartDate.Day.@ViewBag.StartDate.Month.@ViewBag.StartDate.Year do @ViewBag.EndDate.Day.@ViewBag.EndDate.Month.@ViewBag.EndDate.Year </p>
+			<input type="hidden" name="startDate" value="@ViewBag.EndDate" />
+			<input type="hidden" name="endDate" value="@ViewBag.StartDate" />
+		<input type="hidden" name="OfferId" value="@Model.Id" />
+		<button type="submit">rezerwuj</button>
+		}
+	}
+	@if (ViewBag.IsFree == false)
+	{
+		<p>daty nie sa wolne</p>
+	}
 }
 @if(Model.Images != null)
 {

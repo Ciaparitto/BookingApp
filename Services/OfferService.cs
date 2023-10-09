@@ -37,5 +37,11 @@ namespace BookingApp.Services
 			
 			return OfferToDelete.Id;
 		}
+		public int AddBooking(Booking booking)
+		{
+			_Context.BookingList.Add(booking); 
+			_Context.SaveChanges();
+			return booking.Id;
+		}
 	}
 }
