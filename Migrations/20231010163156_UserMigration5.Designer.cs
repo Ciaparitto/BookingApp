@@ -4,6 +4,7 @@ using BookingApp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231010163156_UserMigration5")]
+    partial class UserMigration5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,6 +109,9 @@ namespace BookingApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserModelId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Views")
                         .HasColumnType("int");
 
@@ -123,31 +128,9 @@ namespace BookingApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserModelId");
+
                     b.ToTable("OfferList");
-                });
-
-            modelBuilder.Entity("BookingApp.Models.SavedOffers", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OfferId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("SavedOfferList");
                 });
 
             modelBuilder.Entity("BookingApp.Models.UserModel", b =>
@@ -191,6 +174,9 @@ namespace BookingApp.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<int>("SavedOfferId")
+                        .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -381,23 +367,11 @@ namespace BookingApp.Migrations
                     b.Navigation("Offer");
                 });
 
-            modelBuilder.Entity("BookingApp.Models.SavedOffers", b =>
+            modelBuilder.Entity("BookingApp.Models.Offer", b =>
                 {
-                    b.HasOne("BookingApp.Models.Offer", "Offer")
-                        .WithMany()
-                        .HasForeignKey("OfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookingApp.Models.UserModel", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Offer");
-
-                    b.Navigation("User");
+                    b.HasOne("BookingApp.Models.UserModel", null)
+                        .WithMany("SavedOffers")
+                        .HasForeignKey("UserModelId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -454,6 +428,11 @@ namespace BookingApp.Migrations
             modelBuilder.Entity("BookingApp.Models.Offer", b =>
                 {
                     b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("BookingApp.Models.UserModel", b =>
+                {
+                    b.Navigation("SavedOffers");
                 });
 #pragma warning restore 612, 618
         }

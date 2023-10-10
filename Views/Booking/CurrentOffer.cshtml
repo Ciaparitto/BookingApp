@@ -1,6 +1,11 @@
 ﻿@model BookingApp.Models.Offer
 @{
-	
+
+}
+@using (Html.BeginForm("SaveOffer","booking", FormMethod.Post))
+{
+	@Html.ValidationSummary()
+	<button type="submit" name="OfferId" value="@Model.Id">zapisz</button>
 }
 <p>@Model.title</p>
 <p>@Model.price</p>

@@ -2,6 +2,7 @@
 using BookingApp.Services;
 using BookingApp.Services.Interfaces;
 using BookingApp.Sieve;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -98,6 +99,8 @@ namespace BookingApp.Controllers
 			ViewBag.DateIsChecked = DateIsChecked;
 			ViewBag.IsFree = dateIsFree;
 			var Offer = _OfferService.GetOfferById(OfferId);
+			Offer.Views += 1;
+			_Context.SaveChanges();
 			foreach(var image in _Context.ImageList)
 			{
 				if(image.OfferId == Offer.Id)
@@ -108,11 +111,13 @@ namespace BookingApp.Controllers
 			return View(Offer);
 		}
 		[HttpGet]
+		[Authorize]
 		public IActionResult AddOffer()
 		{
 			return View();
 		}
 		[HttpPost]
+		[Authorize]
 		public IActionResult AddOffer(Offer offer,List<IFormFile> files)
 		{
 			if(ModelState.IsValid)
@@ -187,6 +192,7 @@ namespace BookingApp.Controllers
 			return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId, dateIsFree = true,DateIsChecked = true, startDate = startDate, endDate = endDate });
 		}
 		[HttpPost]
+		[Authorize]
 		public IActionResult AddBooking(DateTime startDate, DateTime endDate,int OfferId )
 		{
 			var USER = _userManager.GetUserAsync(User).Result;
@@ -206,5 +212,29 @@ namespace BookingApp.Controllers
 			}
 			return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId, dateIsFree = false, DateIsChecked = false });
 		}
+
+		[HttpPost]
+		
+		public IActionResult SaveOffer(int OfferId)
+		{
+			
+			var USER = _userManager.GetUserAsync(User).Result;
+			var SavedOfferList = _Context.SavedOfferList.ToList();
+			foreach(var offer in  SavedOfferList)
+			{
+				if(offer.OfferId == OfferId && offer.UserId == USER.Id)
+				{
+					return RedirectToAction("currentoffer", "booking", new { OfferId = OfferId });
+				}
+			}
+			var SavedOffer = new SavedOffers{
+				UserId = USER.Id,
+				OfferId = OfferId
+				};
+			_Context.SavedOfferList.Add(SavedOffer);
+			_Context.SaveChanges();
+			return RedirectToAction("currentoffer","booking", new { OfferId = OfferId });
+			
+		} 
 	}
 }

@@ -26,7 +26,7 @@ namespace BookingApp.Models
 		public string City { get; set; }
 		[Required]
 		public string TypeOfFlat { get; set; }
-		
+		public int Views { get; set; }
 
 		public List<Image>? Images { get; set; }
 		public string? CreatorId { get; set; }

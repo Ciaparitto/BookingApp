@@ -1,6 +1,7 @@
 ﻿using BookingApp.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace BookingApp
 {
@@ -20,6 +21,7 @@ namespace BookingApp
 		public DbSet<Offer> OfferList { get; set; }
 		public DbSet<Image> ImageList { get; set; }
 		public DbSet<Booking> BookingList { get; set; }
+		public DbSet<SavedOffers> SavedOfferList { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
