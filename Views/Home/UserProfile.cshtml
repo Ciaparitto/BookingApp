@@ -1,0 +1,36 @@
+﻿@model BookingApp.Models.UserModel
+<p>@Model.UserName</p>
+<p>zapisane oferty:</p>
+@foreach (var offer in ViewBag.SavedOffers)
+{
+	@using (Html.BeginForm("CurrentOffer", "Booking", FormMethod.Post))
+	{
+		<p>@offer.Offer.title</p>
+		@if (offer.Offer.Images != null && offer.Offer.Images.Count != 0)
+		{
+			<img class="image " src="@Url.Action("DisplayImage", "Home", new { imageId = offer.Offer.Images[0].id })" alt="Obraz" />
+		}
+		else
+		{
+			<img src="~/images/DefaultPhoto.png" alt="Obraz" />
+		}
+		<button type="submit" id="OfferId" value="@offer.Offer.Id" name="OfferId">Przejdz do oferty</button>
+	}
+}
+<p>twoje oferty<</p>
+@foreach (var offer in ViewBag.UserOffers)
+{
+	@using (Html.BeginForm("CurrentOffer", "Booking", FormMethod.Post))
+	{
+		<p>@offer.title</p>
+		@if (offer.Images != null && offer.Images.Count != 0)
+		{
+			<img class="image " src="@Url.Action("DisplayImage", "Home", new { imageId = offer.Images[0].id })" alt="Obraz" />
+		}
+		else
+		{
+			<img src="~/images/DefaultPhoto.png" alt="Obraz" />
+		}
+		<button type="submit" id="OfferId" value="@offer.Id" name="OfferId">Przejdz do oferty</button>
+	}
+}

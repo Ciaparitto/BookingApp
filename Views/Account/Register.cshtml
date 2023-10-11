@@ -1,12 +1,59 @@
 ﻿@model BookingApp.Models.Register
+
+<style>
+    body{
+    font-family:Arial;
+    }
+
+    .logincontainer {
+      text-align:center;
+        display: flex;
+        flex-direction: column;
+
+    }
+    .textarealogin{
+        color:black;
+        margin: 30px;
+       
+    }
+
+    .button {
+        padding: 10px 20px;
+        background-color: rgb(51,100,255);
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 20px;
+        margin: 30px;
+        height:50px;
+        width:500px;
+        text-align:center;
+       
+     }
+
+    input[type="text"], input[type="password"] {
+        background-color: rgb(51,100,255);
+        border: none;
+        padding: 5px;
+        border-radius:20px;
+        color:white;
+    }
+   
+
+</style>
+<body>
 @using (Html.BeginForm("register", "Account", FormMethod.Post))
 {
+    <div class="logincontainer">
     @Html.ValidationSummary()
-    <span class="textarealogin">podaj nazwe uzytkownika: </span>
-    @Html.TextBoxFor(x => x.UserName)
-    <span class="textarealogin">podaj adres email: </span>
-    @Html.TextBoxFor(x => x.EmailAdress)
-    <span class="textarealogin">podaj haslo: </span>
-    @Html.PasswordFor(x => x.Password)
+    <span class="textarealogin">podaj nazwe uzytkownika: <br> @Html.TextBoxFor(x => x.UserName)</span>
+
+    <span class="textarealogin">podaj adres email: <br> @Html.TextBoxFor(x => x.EmailAdress)</span>
+
+    <span class="textarealogin">podaj haslo: <br> @Html.PasswordFor(x => x.Password)</span>
+        </div>
+        <div>
     <button class="button" type="submit">Zarejestruj</button>
-}
+        </div>
+    }
+</body>

@@ -31,6 +31,7 @@ namespace BookingApp.Controllers
 		{
 			return View();
 		}
+		
 		[HttpGet]
 		public IActionResult Offer(Offer offer)
 		{

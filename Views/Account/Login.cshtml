@@ -1,4 +1,8 @@
 ﻿@model BookingApp.Models.Login
+<style>
+  
+</style>
+<body>
 @using (Html.BeginForm("Login", "Account", FormMethod.Post))
 {
     @Html.ValidationSummary()
@@ -9,3 +13,4 @@
     @Html.PasswordFor(x => x.Password)
     <button class="button" type="submit">Zarejestruj</button>
 }
+</body>
