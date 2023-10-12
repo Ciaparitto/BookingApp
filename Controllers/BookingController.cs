@@ -10,6 +10,7 @@ using Sieve.Models;
 using Sieve.Services;
 using System.Linq.Dynamic.Core;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace BookingApp.Controllers
 {
@@ -38,12 +39,41 @@ namespace BookingApp.Controllers
 			return View(offer);
 		}
 		[HttpGet]
-		public IActionResult SearchOffer()
+		public IActionResult SearchOffer([FromQuery] string RoomsNumber, [FromQuery] string MinPrice, [FromQuery] string MaxPrice, [FromQuery] string City, [FromQuery] string TypeOfFlat, [FromQuery] string KeyWords)
 		{
-			var OfferList = _OfferService.GetAllOffer();
-			foreach(var offer in OfferList)
+            var offers = _Context.OfferList.AsQueryable();
+            if (KeyWords != null)
+            {
+                offers = offers.Where(x => x.title.Contains(KeyWords));
+            }
+
+
+            if (TypeOfFlat != null)
+            {
+                offers = offers.Where(o => o.TypeOfFlat == TypeOfFlat);
+            }
+            if (MaxPrice != null)
+            {
+                offers = offers.Where(o => o.price <= int.Parse(MaxPrice));
+            }
+            if (MinPrice != null)
+            {
+                offers = offers.Where(o => o.price >= int.Parse(MinPrice));
+            }
+
+            if (City != null)
+            {
+                offers = offers.Where(o => o.City == City);
+            }
+
+            if (RoomsNumber != null)
+            {
+                offers = offers.Where(o => o.NumberOfRooms == int.Parse(RoomsNumber));
+            }
+            var imageList = _Context.ImageList.ToList();
+			foreach(var offer in offers)
 			{
-				foreach(var image in _Context.ImageList)
+				foreach(var image in imageList)
 				{
 					if(image.OfferId == offer.Id)
 					{
@@ -51,45 +81,6 @@ namespace BookingApp.Controllers
 					}
 				}
 			}
-			return View(OfferList);
-		}
-		[HttpGet]
-		public IActionResult SearchCurrentOffer([FromQuery] string RoomsNumber, [FromQuery] string MinPrice, [FromQuery] string MaxPrice, [FromQuery] string City, [FromQuery] string TypeOfFlat, [FromQuery] string KeyWords)
-		{
-			
-
-			var offers = _Context.OfferList.AsQueryable();
-			if (KeyWords != null)
-			{
-				offers = offers.Where(x => x.title.Contains(KeyWords));
-			}
-			
-			
-			if (TypeOfFlat != null)
-			{
-				offers = offers.Where(o => o.TypeOfFlat == TypeOfFlat);
-			}
-			if (MaxPrice != null)
-			{
-				offers = offers.Where(o => o.price <= int.Parse(MaxPrice));
-			}
-			if (MinPrice != null)
-			{
-				offers = offers.Where(o => o.price >= int.Parse(MinPrice));
-			}
-		
-			if (City != null)
-			{
-				offers = offers.Where(o => o.City == City);
-			}
-
-			if (RoomsNumber != null)
-			{
-				offers = offers.Where(o => o.NumberOfRooms == int.Parse(RoomsNumber));
-			}
-
-
-
 			return View(offers);
 		}
 		

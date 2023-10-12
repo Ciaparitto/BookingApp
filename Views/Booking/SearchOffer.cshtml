@@ -1,28 +1,140 @@
 ﻿@model IEnumerable<BookingApp.Models.Offer>
-@using (Html.BeginForm("SearchCurrentOffer", "Booking", FormMethod.Get))
+<style>
+    body {
+        font-family: Arial;
+    }
+
+    .offercontainer {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+       
+    }
+
+    .textarealogin {
+        color: black;
+        margin: 30px;
+    }
+
+    .button {
+        padding: 10px 20px;
+        background-color: rgb(51,100,255);
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 20px;
+        
+        text-align: center;
+    }
+
+    input[type="text"], input[type="number"] {
+        background-color: rgb(51,100,255);
+        border: none;
+        border-radius: 20px;
+        color: white;
+    }
+    .image{
+        height:500px;
+        width:500px;
+    }
+
+    .offer {
+        margin: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items:center;
+        
+    }
+
+
+    .offerbutton{
+        background-color: rgb(51,100,255);
+        border: none;
+        padding:20px;
+        border-radius:20px;
+        color:white
+        
+    }
+    .offerparagaph{
+        float:right;
+    }
+
+    .offer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .offer-title {
+        text-align: center;
+        float:right;
+        padding:5px;
+    }
+    .select{
+        background-color: rgb(51,100,255);
+        border: none;
+        border-radius: 20px;
+        color: white;
+    }
+
+    .select option{
+        background-color: rgb(51,100,255);
+        border: none;
+        border-radius: 20px;
+        color: white;
+    }
+
+    .filtercontainer{
+        padding:20px;
+    }
+</style>
+<body>
+@using (Html.BeginForm("SearchOffer", "Booking", FormMethod.Get))
 	{
-@Html.ValidationSummary()
-<p>pokoj liczbe pokoi<input type="number" name="RoomsNumber" /></p>
+
+        <div class="filtercontainer">
+<p>pokoj liczbe pokoi <input type="number" name="RoomsNumber" /></p>
 <p>podaj cene minimalna <input type="number" name="MinPrice" /></p>
 <p>podaj cene maksymalna <input type="number" name="MaxPrice" /></p>
-<p>podaj miasto<input type="text" name="City" /></p>
-<p>Dom/Mieszkanie <input type="text" name="TypeOfFlat" /> </p>
-	<p>Szukaj <input type="text" name="KeyWords" /> </p>
-<button type="submit">Szukaj</button>
+<p>podaj miasto <input type="text" name="City" /></p>
+        <p>
+            Dom/Mieszkanie
+            <select name="TypeOfFlat" class="select">
+                <option value="Dom">Dom</option>
+                <option value="Mieszkanie">Mieszkanie</option>
+            </select> 
+        </p>
+        
+<p>Szukaj <input type="text" name="KeyWords" /> </p>
+
+<button class="button"type="submit">Szukaj</button>
+        </div>
 	}
+ <div class="offercontainer"></div>
 @foreach(var offer in Model)
 {
 	@using (Html.BeginForm("CurrentOffer", "Booking", FormMethod.Post))
 	{
-		<p>@offer.title</p>
+        <div class="offer">
+        <button class="offerbutton" type="submit" id="OfferId" value="@offer.Id" name="OfferId">
+        <div class="offer-content">
+                        
 		@if (offer.Images != null && offer.Images.Count != 0)
 		{
-			<img class="image " src="@Url.Action("DisplayImage", "Home", new { imageId = offer.Images[0].id })" alt="Obraz" />
+			<img class="image" src="@Url.Action("DisplayImage", "Home", new { imageId = offer.Images[0].id })" alt="Obraz" />
 		}
 		else
 		{
-			<img src="~/images/DefaultPhoto.png" alt="Obraz" />
+			<img class="image" src="~/images/DefaultPhoto.png" alt="Obraz" />
 		}
-		<button type="submit" id="OfferId" value="@offer.Id" name="OfferId">Przejdz do oferty</button>
+        <div class="right-column">
+                            <p class="offer-title"><h3>@offer.title</h3></p>
+        </div>
+        </div>
+	    </button>
+        </div>
 	}
 }
+</body>

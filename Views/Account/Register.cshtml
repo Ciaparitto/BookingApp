@@ -9,11 +9,14 @@
       text-align:center;
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        height: 50vh;
 
     }
     .textarealogin{
         color:black;
         margin: 30px;
+        
        
     }
 
@@ -25,16 +28,15 @@
         cursor: pointer;
         border-radius: 20px;
         margin: 30px;
-        height:50px;
-        width:500px;
         text-align:center;
+       
        
      }
 
     input[type="text"], input[type="password"] {
         background-color: rgb(51,100,255);
         border: none;
-        padding: 5px;
+        padding: 10px;
         border-radius:20px;
         color:white;
     }
@@ -46,14 +48,15 @@
 {
     <div class="logincontainer">
     @Html.ValidationSummary()
-    <span class="textarealogin">podaj nazwe uzytkownika: <br> @Html.TextBoxFor(x => x.UserName)</span>
+     <p class="textarealogin">podaj nazwe uzytkownika: <br> @Html.TextBoxFor(x => x.UserName)</p>
 
-    <span class="textarealogin">podaj adres email: <br> @Html.TextBoxFor(x => x.EmailAdress)</span>
+    <p class="textarealogin"> podaj adres email:<br> @Html.TextBoxFor(x => x.EmailAdress)</p>
 
-    <span class="textarealogin">podaj haslo: <br> @Html.PasswordFor(x => x.Password)</span>
+    <p class="textarealogin"> podaj haslo:<br> @Html.PasswordFor(x => x.Password)</p>
+    <p><button class="button" type="submit">Zarejestruj</button></p>
         </div>
-        <div>
-    <button class="button" type="submit">Zarejestruj</button>
-        </div>
+        
+  
+        
     }
 </body>
