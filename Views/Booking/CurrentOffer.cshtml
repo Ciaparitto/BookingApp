@@ -1,14 +1,44 @@
 ﻿@model BookingApp.Models.Offer
-@{
+<style>
+    body {
+        font-family: Arial;
+    }
 
-}
-@using (Html.BeginForm("SaveOffer","booking", FormMethod.Post))
-{
-	@Html.ValidationSummary()
-	<button type="submit" name="OfferId" value="@Model.Id">zapisz</button>
-}
-<p>@Model.title</p>
-<p>@Model.price</p>
+    .button {
+        padding: 10px 20px;
+        background-color: rgb(51,100,255);
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 20px;
+        
+        text-align: center;
+        height:50px;
+        width:150px;
+    }
+
+    input[type="text"], input[type="date"] {
+        background-color: rgb(51,100,255);
+        border: none;
+        border-radius: 20px;
+        color: white;
+        padding:5px;
+    }
+    .image{
+        height:500px;
+        width:500px;
+        float:left;
+        margin:10px;
+    }
+    h1{
+        text-align:center;
+    }
+
+  </style>
+
+<h1>@Model.title</h1>
+<p>Cena: @Model.price</p>
+<p>@Model.description</p>
 @if (ViewBag.DateIsChecked == false)
 {
 
@@ -17,11 +47,20 @@
 	{
 		@Html.ValidationSummary()
 
-		<p>wybierz date rozpoczecia<input type="date" name="startDate" /></p>
-		<p>wybierz date zakonczenia<input type="date" name="endDate" /></p>
+		<p>wybierz date rozpoczecia <input type="date" name="startDate" /></p>
+		<p>wybierz date zakonczenia <input type="date" name="endDate" /></p>
 		<input type="hidden" name="OfferId" value="@Model.Id"/>
-		<button type="submit">sprawdz daty</button>
+		<button class="button" type="submit">sprawdz daty</button>
 	}
+
+}
+@if (User.Identity.IsAuthenticated)
+{
+    @using (Html.BeginForm("SaveOffer", "booking", FormMethod.Post))
+    {
+        @Html.ValidationSummary()
+        <button class="button" type="submit" name="OfferId" value="@Model.Id">zapisz</button>
+    }
 }
 @if (ViewBag.DateIsChecked)
 {
@@ -37,7 +76,7 @@
 			<input type="hidden" name="startDate" value="@ViewBag.EndDate" />
 			<input type="hidden" name="endDate" value="@ViewBag.StartDate" />
 		<input type="hidden" name="OfferId" value="@Model.Id" />
-		<button type="submit">rezerwuj</button>
+            <button class="button"  type="submit">rezerwuj</button>
 		}
 	}
 	@if (ViewBag.IsFree == false)
@@ -50,9 +89,9 @@
 
 @foreach(var image in Model.Images)
 {
-	<img class="image " src="@Url.Action("DisplayImage", "Home", new { imageId = image.id })" alt="Obraz" />
+	<img class="image" src="@Url.Action("DisplayImage", "Home", new { imageId = image.id })" alt="Obraz" />
 }
 }else{
-	<img src="~/images/DefaultPhoto.png" alt="Obraz" />
+	<img class="image" src="~/images/DefaultPhoto.png" alt="Obraz" />
 
 }

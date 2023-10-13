@@ -93,14 +93,23 @@ namespace BookingApp.Controllers
 			var Offer = _OfferService.GetOfferById(OfferId);
 			Offer.Views += 1;
 			_Context.SaveChanges();
-			foreach(var image in _Context.ImageList)
+            
+			var ImageList =_Context.ImageList.Where(x => x.OfferId == OfferId);
+			var imagelist = new List<Image>();
+			foreach(var image in ImageList)
 			{
-				if(image.OfferId == Offer.Id)
-				{
-					Offer.Images.Add(image);
-				}
+                imagelist.Add(image);
+				
 			}
-			return View(Offer);
+			if(imagelist.Count > 0)
+			{		
+			for(int i = 0;i >= ImageList.Count();i++)
+			{
+				Offer.Images.Add(imagelist[i]);
+			}
+            }
+            return View(Offer);
+			
 		}
 		[HttpGet]
 		[Authorize]
@@ -206,8 +215,9 @@ namespace BookingApp.Controllers
 		}
 
 		[HttpPost]
-		
-		public IActionResult SaveOffer(int OfferId)
+        [Authorize]
+
+        public IActionResult SaveOffer(int OfferId)
 		{
 			
 			var USER = _userManager.GetUserAsync(User).Result;

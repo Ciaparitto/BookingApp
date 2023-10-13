@@ -1,8 +1,24 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿<style>
+    .1{
+        background-color: rgb(51,100,255);
+        margin: 20px;
+        border-radius: 20px;
+        text-align: center;
+        width: 500px;
+        height: 200px;
+    }
+</style>
+  <body>                                          
+<a class="1" asp-area="" asp-controller="booking" asp-action="searchoffer">szukaj ofert</a>
+@if (User.Identity.IsAuthenticated)
+{
+    <a class="1" asp-area="" asp-controller="Account" asp-action="LogOut">Wyloguj</a>
+    <a class="1" asp-area="" asp-controller="booking" asp-action="Addoffer">dodaj oferte</a>
+    <a class="1" asp-area="" asp-controller="home" asp-action="UserProfile">przejdz do profilu</a>
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+else
+{
+    <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">zaloguj</a>
+    <a class="nav-link" asp-area="" asp-controller="Account" asp-action="register">zarejestruj</a>
+}
+</body>         

@@ -1,36 +1,94 @@
 ﻿@model BookingApp.Models.UserModel
-<p>@Model.UserName</p>
-<p>zapisane oferty:</p>
+<style>
+    body {
+        font-family: Arial;
+    }
+
+    .offercontainer {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+       
+    }
+
+    .textarealogin {
+        color: black;
+        margin: 30px;
+    }
+
+    .button {
+        padding: 20px;
+        margin:30px;
+        background-color: rgb(51,100,255);
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 20px;
+        text-align: center;
+        float:left;
+    }
+
+    input[type="text"], input[type="number"] {
+        background-color: rgb(51,100,255);
+        border: none;
+        border-radius: 20px;
+        color: white;
+    }
+    .image{
+        height:200px;
+        width:200px;
+    }
+
+    .offer {
+        margin: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items:center;
+        
+    }
+    h1, h4{
+        clear:both;
+        text-align:center
+    }
+
+  </style>
+<h4>twoja nazwa: @Model.UserName</h4>
+<h1>zapisane oferty:</h1>
 @foreach (var offer in ViewBag.SavedOffers)
 {
 	@using (Html.BeginForm("CurrentOffer", "Booking", FormMethod.Post))
 	{
+		<button class="button" type="submit" id="OfferId" value="@offer.Offer.Id" name="OfferId">
 		<p>@offer.Offer.title</p>
 		@if (offer.Offer.Images != null && offer.Offer.Images.Count != 0)
 		{
-			<img class="image " src="@Url.Action("DisplayImage", "Home", new { imageId = offer.Offer.Images[0].id })" alt="Obraz" />
+			<img class="image" src="@Url.Action("DisplayImage", "Home", new { imageId = offer.Offer.Images[0].id })" alt="Obraz" />
 		}
 		else
 		{
-			<img src="~/images/DefaultPhoto.png" alt="Obraz" />
+			<img class="image" src="~/images/DefaultPhoto.png" alt="Obraz" />
 		}
-		<button type="submit" id="OfferId" value="@offer.Offer.Id" name="OfferId">Przejdz do oferty</button>
+		</button>
 	}
 }
-<p>twoje oferty<</p>
+<p></p>
+<h1>twoje oferty</h1>
 @foreach (var offer in ViewBag.UserOffers)
 {
 	@using (Html.BeginForm("CurrentOffer", "Booking", FormMethod.Post))
 	{
+        <button  class="button"type="submit" id="OfferId" value="@offer.Id" name="OfferId">
 		<p>@offer.title</p>
 		@if (offer.Images != null && offer.Images.Count != 0)
 		{
-			<img class="image " src="@Url.Action("DisplayImage", "Home", new { imageId = offer.Images[0].id })" alt="Obraz" />
+			<img class="image" src="@Url.Action("DisplayImage", "Home", new { imageId = offer.Images[0].id })" alt="Obraz" />
 		}
 		else
 		{
-			<img src="~/images/DefaultPhoto.png" alt="Obraz" />
+            <img class="image"  src="~/images/DefaultPhoto.png" alt="Obraz" />
 		}
-		<button type="submit" id="OfferId" value="@offer.Id" name="OfferId">Przejdz do oferty</button>
+		</button>
 	}
 }
