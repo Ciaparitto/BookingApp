@@ -90,7 +90,12 @@ namespace BookingApp.Controllers
 			ViewBag.EndDate = endDate;
 			ViewBag.DateIsChecked = DateIsChecked;
 			ViewBag.IsFree = dateIsFree;
-			var Offer = _OfferService.GetOfferById(OfferId);
+            var USER = _userManager.GetUserAsync(User).Result;
+            var Offer = _OfferService.GetOfferById(OfferId);
+			if (Offer.CreatorId == USER.Id)
+			{
+				ViewBag.CanEdit = true;
+			}
 			Offer.Views += 1;
 			_Context.SaveChanges();
             
@@ -237,6 +242,91 @@ namespace BookingApp.Controllers
 			_Context.SaveChanges();
 			return RedirectToAction("currentoffer","booking", new { OfferId = OfferId });
 			
-		} 
+		}
+		[HttpGet]
+		
+		public IActionResult EditOffer(int offerId)
+		{
+			var offer = _OfferService.GetOfferById(offerId);
+			var ImageList = _Context.ImageList.Where(x => x.OfferId == offerId);
+			var imagelist = new List<Image>();
+			foreach (var image in ImageList)
+			{
+				imagelist.Add(image);
+
+			}
+			if (imagelist.Count > 0)
+			{
+				for (int i = 0; i >= ImageList.Count(); i++)
+				{
+					offer.Images.Add(imagelist[i]);
+				}
+			}
+				return View(offer);
+		}
+		[HttpPost]
+		public IActionResult EditOffer(Offer body,List<IFormFile> files)
+		{
+			var USER = _userManager.GetUserAsync(User).Result;
+			var images = _Context.ImageList.Where(i => i.OfferId == body.Id).ToList();
+			
+
+				if (!ModelState.IsValid)
+				{
+
+					return RedirectToAction("Editnews", new { id = body.Id });
+				}
+
+				var offer = _OfferService.GetOfferById(body.Id);
+				if (offer != null)
+				{
+				offer.title = body.title;
+				offer.description = body.description;
+				offer.City = body.City;
+				offer.price = body.price;
+				offer.TypeOfFlat = body.TypeOfFlat;
+				offer.NumberOfRooms	= body.NumberOfRooms;
+				_Context.SaveChanges();
+
+				}
+				if (files != null && files.Count > 0)
+				{
+					foreach (var imageFile in HttpContext.Request.Form.Files)
+					{
+						using (var memoryStream = new MemoryStream())
+						{
+							imageFile.CopyTo(memoryStream);
+
+							var image = new Image
+							{
+								image = memoryStream.ToArray(),
+								ContentType = imageFile.ContentType,
+								OfferId = body.Id
+
+
+							};
+							_Context.ImageList.Add(image);
+
+						}
+					}
+				}
+			_Context.SaveChanges();			
+			return RedirectToAction("Index", "Home");
+		}
+		[HttpPost]
+		[Authorize]
+		public IActionResult DeletePhoto(int imageId, Offer body)
+		{
+			var image = _Context.ImageList.FirstOrDefault(i => i.id == imageId);
+			if (image != null)
+			{
+				
+				_Context.ImageList.Remove(_Context.ImageList.FirstOrDefault(i => i.id == imageId));
+				_Context.SaveChanges();
+				return RedirectToAction("EditOffer", "Home", new { id = body.Id });
+			}
+
+			return RedirectToAction("EditOffer", "Home", new { id = body.Id });
+		}
 	}
 }

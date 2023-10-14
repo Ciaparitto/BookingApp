@@ -1,24 +1,36 @@
 ﻿<style>
-    .1{
+    .button{
         background-color: rgb(51,100,255);
         margin: 20px;
         border-radius: 20px;
+        width: 250px;
+        height: 100px;
+        border:none;
+        color:white;
+      
+    }
+
+    .buttoncontainer{
+        align-items: center;
         text-align: center;
-        width: 500px;
-        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 </style>
-  <body>                                          
-<a class="1" asp-area="" asp-controller="booking" asp-action="searchoffer">szukaj ofert</a>
+  <body>
+      <div class="buttoncontainer">
+    <button class="button" onclick="window.location.href='@Url.Action("searchoffer", "booking")'">Szukaj ofert</button>
 @if (User.Identity.IsAuthenticated)
 {
-    <a class="1" asp-area="" asp-controller="Account" asp-action="LogOut">Wyloguj</a>
-    <a class="1" asp-area="" asp-controller="booking" asp-action="Addoffer">dodaj oferte</a>
-    <a class="1" asp-area="" asp-controller="home" asp-action="UserProfile">przejdz do profilu</a>
+        <button class="button" onclick="window.location.href='@Url.Action("logout", "Account")'">Wyloguj</button>
+        <button class="button" onclick="window.location.href='@Url.Action("Addoffer", "Booking")'">Dodaj ofertę</button>
+        <button class="button" onclick="window.location.href='@Url.Action("userprofile", "home")'">Przejdz do profilu</button>
 }
 else
 {
-    <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">zaloguj</a>
-    <a class="nav-link" asp-area="" asp-controller="Account" asp-action="register">zarejestruj</a>
+        <button class="button" onclick="window.location.href='@Url.Action("login", "Account")'">Zaloguj</button>
+        <button class="button" onclick="window.location.href='@Url.Action("register", "Account")'">Zarejestuj</button>
 }
+    </div>
 </body>         

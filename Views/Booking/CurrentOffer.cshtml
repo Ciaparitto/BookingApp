@@ -35,13 +35,15 @@
     }
 
   </style>
-
+@if(ViewBag.CanEdit)
+{
+    <button class="button"onclick="window.location.href='@Url.Action("EditOffer", "Booking", new {offerId = Model.Id})'">Edytuj</button>
+}
 <h1>@Model.title</h1>
 <p>Cena: @Model.price</p>
 <p>@Model.description</p>
 @if (ViewBag.DateIsChecked == false)
 {
-
 
 	@using (Html.BeginForm("checkdate", "booking", FormMethod.Get))
 	{

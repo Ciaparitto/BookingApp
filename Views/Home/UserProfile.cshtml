@@ -77,9 +77,10 @@
 <h1>twoje oferty</h1>
 @foreach (var offer in ViewBag.UserOffers)
 {
+   
 	@using (Html.BeginForm("CurrentOffer", "Booking", FormMethod.Post))
 	{
-        <button  class="button"type="submit" id="OfferId" value="@offer.Id" name="OfferId">
+        <button class="button" type="submit" id="OfferId" value="@offer.Id" name="OfferId">
 		<p>@offer.title</p>
 		@if (offer.Images != null && offer.Images.Count != 0)
 		{
@@ -91,4 +92,5 @@
 		}
 		</button>
 	}
+
 }

@@ -1,0 +1,47 @@
+﻿@model BookingApp.Models.Offer
+@using (Html.BeginForm("EditOffer", "Booking", FormMethod.Post))
+	{
+	@Html.ValidationSummary()
+	<p>podaj tytul ogloszenia</p>
+	@Html.TextBoxFor(x => x.title)
+	<p>podaj opis ogloszenie</p>
+	@Html.TextBoxFor(x => x.description)
+	<p>podaj nazwe miasta</p>
+	@Html.TextBoxFor(x => x.City)
+	<p>podaj liczbe pokoi</p>
+	@Html.TextBoxFor(x => x.NumberOfRooms, new {type="number"})
+	<p>
+		Dom/Mieszkanie
+		<select name="TypeOfFlat" class="select">
+			<option value="Dom">Dom</option>
+			<option value="Mieszkanie">Mieszkanie</option>
+		</select>
+	</p>
+	<p>podaj Cene</p>
+	@Html.TextBoxFor(x => x.price, new {type="number"})
+	<p>dodaj zdjecia<input type="file" name="files" multiple /></p>
+
+	@Html.HiddenFor(x => x.CreatorId)
+	@Html.HiddenFor(x => x.Images)
+	@Html.HiddenFor(x => x.Id)
+	<button type="submit">Dodaj</button>
+	}
+	@if (Model.Images != null)
+	{
+		@foreach(var image in Model.Images)
+		{
+		    <div class="imagecontainer">
+			@using (Html.BeginForm("DeletePhoto", "Home", FormMethod.Post))
+			{
+				@Html.ValidationSummary()
+				@Html.HiddenFor(n => n.Id)
+				@Html.Hidden("ImageId", image.id)
+                <button class="button" type="submit">Usun</button>    
+                <img class="image"src="@Url.Action("DisplayImage", "Home", new { imageId = image.id })" alt="Obraz" />
+                
+			
+				
+			}
+			</div>
+		}
+	}
