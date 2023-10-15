@@ -92,9 +92,12 @@ namespace BookingApp.Controllers
 			ViewBag.IsFree = dateIsFree;
             var USER = _userManager.GetUserAsync(User).Result;
             var Offer = _OfferService.GetOfferById(OfferId);
-			if (Offer.CreatorId == USER.Id)
+			if (USER != null && Offer.CreatorId == USER.Id)
 			{
 				ViewBag.CanEdit = true;
+			}else
+			{
+				ViewBag.CanEdit = false;
 			}
 			Offer.Views += 1;
 			_Context.SaveChanges();

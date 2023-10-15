@@ -1,24 +1,51 @@
 ﻿@model	BookingApp.Models.Offer
+<style>
+  body {
+        font-family: Arial;
+    }
+   
+    .button, .customfilelabel {
+        padding: 10px 20px;
+        background-color: rgb(51,100,255);
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 20px;
+
+        text-align: center;
+    }
+
+    input[type="text"], input[type="number"]{
+        background-color: rgb(51,100,255);
+        border: none;
+        border-radius: 20px;
+        color: white;
+    }
+
+    .customfiles {
+        display: none; 
+    }
+
+</style>
+<body>
 @using (Html.BeginForm("AddOffer", "Booking", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
 {
 	
 	@Html.ValidationSummary()
-	<p>podaj tytul ogloszenia</p>
-	@Html.TextBoxFor(x => x.title)
-	<p>podaj opis ogloszenie</p>
-	@Html.TextBoxFor(x => x.description)
-	<p>podaj nazwe miasta</p>
-	@Html.TextBoxFor(x => x.City)
-	<p>podaj liczbe pokoi</p>
-	@Html.TextBoxFor(x => x.NumberOfRooms, new {type="number"})
-	<p>podaj typ Dom/Mieszkanie</p>
-	@Html.TextBoxFor(x => x.TypeOfFlat)
-	<p>podaj Cene</p>
-	@Html.TextBoxFor(x => x.price, new {type="number"})
-	<p>dodaj zdjecia<input type="file" name="files" multiple /></p>
+	<p>podaj tytul ogloszenia @Html.TextBoxFor(x => x.title)</p>
 	
-	@Html.HiddenFor(x => x.CreatorId)
-	@Html.HiddenFor(x => x.Images)
-	<button type="submit">Dodaj</button>
+		<p>podaj opis ogloszenie @Html.TextBoxFor(x => x.description)</p>	
+		<p>podaj nazwe miasta @Html.TextBoxFor(x => x.City)</p>	
+		<p>podaj liczbe pokoi @Html.TextBoxFor(x => x.NumberOfRooms, new {type="number"})</p> 
+		<p>podaj typ Dom/Mieszkanie @Html.TextBoxFor(x => x.TypeOfFlat)</p>	
+		<p>podaj Cene @Html.TextBoxFor(x => x.price, new {type="number"})</p>
+        <p>
+            dodaj zdjecia <input class="customfiles" type="file" id="customfiles" name="files" multiple />
+            <label class="customfilelabel" for="customfiles">Wybierz pliki</label>
+        </p>
+	    @Html.HiddenFor(x => x.CreatorId)
+	    @Html.HiddenFor(x => x.Images)
+	    <button class="button"type="submit">Dodaj</button>
 	
 }
+</body>

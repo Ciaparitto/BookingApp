@@ -12,9 +12,9 @@ using Sieve.Models;
 using Sieve.Services;
 using Sieve;
 using Swashbuckle.AspNetCore;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +24,6 @@ builder.Services.AddScoped<ISieveProcessor, AppSieveProcessor>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddSingleton<AppSieveProcessor>();
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddControllers();
-//builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<FormOptions>(options =>
 {
@@ -44,6 +42,16 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
 }).AddEntityFrameworkStores<AppDbContext>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login"; // Œcie¿ka do strony logowania
+        options.AccessDeniedPath = "/Account/AccessDenied"; // Œcie¿ka do strony odrzucenia dostêpu
+        options.LogoutPath = "/Account/Logout"; // Œcie¿ka do strony wylogowania
+    });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -57,38 +65,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 
-
 app.UseRouting();
 
-app.UseAuthorization();
 app.UseAuthentication();
-//app.UseSwagger();
-/*
-app.UseSwaggerUI(options =>
-{
-	options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-	options.RoutePrefix = string.Empty;
-	options.DocumentTitle = "My swagger";
-});
-*/
-app.MapPost("sieve", async ([FromBody] SieveModel query,ISieveProcessor sieveProcessor, AppDbContext context)=>
-{
-
-	var offers = context.OfferList
-	.AsQueryable();
-
-	var Goodoffers = await sieveProcessor
-	.Apply(query, offers)
-	.ToListAsync();
-
-	var totalcount = await sieveProcessor
-	.Apply(query, offers, applyPagination: false, applySorting: false)
-	.CountAsync();
-
-	var result = new PagedResult<Offer>(Goodoffers, totalcount, query.PageSize.Value, query.Page.Value);
-	return result;
-});
-
+app.UseAuthorization();
 
 app.MapControllerRoute(
 	name: "default",

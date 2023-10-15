@@ -33,7 +33,7 @@ namespace BookingApp.Controllers
 				await _signInManager.PasswordSignInAsync(UserData.UserName, UserData.Password, false, false);
 				return RedirectToAction("Index", "Home");
 			}
-			return View(User);
+			return View(UserData);
 		}
 		public IActionResult Index()
 		{

@@ -1,15 +1,50 @@
 ﻿@model BookingApp.Models.Offer
+<style>
+	body {
+		font-family: Arial;
+	}
+
+	.button, .customfilelabel {
+		padding: 10px 20px;
+		background-color: rgb(51,100,255);
+		color: white;
+		border: none;
+		cursor: pointer;
+		border-radius: 20px;
+		text-align: center;
+	}
+
+	input[type="text"], input[type="number"],.select {
+		background-color: rgb(51,100,255);
+		border: none;
+		border-radius: 20px;
+		color: white;
+	}
+
+	.customfiles {
+		display: none;
+	}
+
+	.photo{
+		
+	}
+	img{
+		background-color: rgb(51,100,255);
+		border-radius:20px;
+		padding: 20px;
+		height:250px;
+		width:250px;
+	}
+</style>
+<body>
 @using (Html.BeginForm("EditOffer", "Booking", FormMethod.Post))
 	{
 	@Html.ValidationSummary()
-	<p>podaj tytul ogloszenia</p>
-	@Html.TextBoxFor(x => x.title)
-	<p>podaj opis ogloszenie</p>
-	@Html.TextBoxFor(x => x.description)
-	<p>podaj nazwe miasta</p>
-	@Html.TextBoxFor(x => x.City)
-	<p>podaj liczbe pokoi</p>
-	@Html.TextBoxFor(x => x.NumberOfRooms, new {type="number"})
+		<button class="button" type="submit">Zapisz</button>
+	<p>podaj tytul ogloszenia @Html.TextBoxFor(x => x.title)</p>
+	<p>podaj opis ogloszenie @Html.TextBoxFor(x => x.description)</p>
+	<p>podaj nazwe miasta @Html.TextBoxFor(x => x.City)</p>
+	<p>podaj liczbe pokoi @Html.TextBoxFor(x => x.NumberOfRooms, new {type="number"})</p>
 	<p>
 		Dom/Mieszkanie
 		<select name="TypeOfFlat" class="select">
@@ -17,14 +52,16 @@
 			<option value="Mieszkanie">Mieszkanie</option>
 		</select>
 	</p>
-	<p>podaj Cene</p>
-	@Html.TextBoxFor(x => x.price, new {type="number"})
-	<p>dodaj zdjecia<input type="file" name="files" multiple /></p>
-
+		<p>podaj Cene @Html.TextBoxFor(x => x.price, new {type="number"})</p>
+	
+		<p>
+			dodaj zdjecia <input class="customfiles" type="file" id="customfiles" name="files" multiple />
+			<label class="customfilelabel" for="customfiles">Wybierz pliki</label>
+		</p>
 	@Html.HiddenFor(x => x.CreatorId)
 	@Html.HiddenFor(x => x.Images)
 	@Html.HiddenFor(x => x.Id)
-	<button type="submit">Dodaj</button>
+	
 	}
 	@if (Model.Images != null)
 	{
@@ -33,15 +70,14 @@
 		    <div class="imagecontainer">
 			@using (Html.BeginForm("DeletePhoto", "Home", FormMethod.Post))
 			{
+				
 				@Html.ValidationSummary()
-				@Html.HiddenFor(n => n.Id)
-				@Html.Hidden("ImageId", image.id)
-                <button class="button" type="submit">Usun</button>    
+				<input type="hidden" name="photoid" value="@image.id"/>  
                 <img class="image"src="@Url.Action("DisplayImage", "Home", new { imageId = image.id })" alt="Obraz" />
-                
-			
+				<button class="button" type="submit" name="offerid" value="@Model.Id">Usun</button>
 				
 			}
 			</div>
 		}
 	}
+</body>

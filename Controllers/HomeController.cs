@@ -42,6 +42,13 @@ namespace BookingApp.Controllers
 
 			return File(image.image, "image/jpeg");
 		}
+		public IActionResult DeletePhoto(string offerid,int photoid)
+		{
+			var photo = _Context.ImageList.Where(x => x.id == photoid).FirstOrDefault();
+			_Context.ImageList.Remove(photo);
+			_Context.SaveChanges();
+			return RedirectToAction("EditOffer", "Booking", new { offerid = offerid});
+		}
 		public IActionResult UserProfile()
 		{
 			var USER = _userManager.GetUserAsync(User).Result;
