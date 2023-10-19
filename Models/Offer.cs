@@ -20,7 +20,6 @@ namespace BookingApp.Models
 		[Required]
 		public float price { get; set; }
 		[Required]
-		[Sieve(CanFilter = true)]
 		public int NumberOfRooms {get; set; }
 		[Required]
 		public string City { get; set; }

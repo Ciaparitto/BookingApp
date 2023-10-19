@@ -1,13 +1,10 @@
 ﻿using BookingApp.Models;
 using BookingApp.Services;
 using BookingApp.Services.Interfaces;
-using BookingApp.Sieve;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Sieve.Models;
-using Sieve.Services;
 using System.Linq.Dynamic.Core;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
@@ -18,12 +15,11 @@ namespace BookingApp.Controllers
 	public class BookingController : Controller
 	{
 		public readonly IOfferService _OfferService;
-		private readonly ISieveProcessor _sieveProcessor;
 		public readonly AppDbContext _Context;
 		private readonly UserManager<UserModel> _userManager;
-		public BookingController(IOfferService OfferService,AppDbContext context, UserManager<UserModel> userManager,ISieveProcessor sieveProcessor) 
+		public BookingController(IOfferService OfferService,AppDbContext context, UserManager<UserModel> userManager) 
 		{
-			_sieveProcessor = sieveProcessor;
+			
 			_OfferService = OfferService;	
 			_Context = context;
 			_userManager = userManager;
@@ -162,8 +158,9 @@ namespace BookingApp.Controllers
 				}
 				return View();
 			}
-		[HttpPost]
-		public IActionResult DeleteOffer(int OfferId)
+		[HttpGet]
+        [Authorize]
+        public IActionResult DeleteOffer(int OfferId)
 		{
 			_OfferService.RemoveOffer(OfferId);
 			return RedirectToAction("SearchOffer", "Booking");
@@ -247,8 +244,9 @@ namespace BookingApp.Controllers
 			
 		}
 		[HttpGet]
-		
-		public IActionResult EditOffer(int offerId)
+        [Authorize]
+
+        public IActionResult EditOffer(int offerId)
 		{
 			var offer = _OfferService.GetOfferById(offerId);
 			var ImageList = _Context.ImageList.Where(x => x.OfferId == offerId);
@@ -268,7 +266,8 @@ namespace BookingApp.Controllers
 				return View(offer);
 		}
 		[HttpPost]
-		public IActionResult EditOffer(Offer body,List<IFormFile> files)
+        [Authorize]
+        public IActionResult EditOffer(Offer body,List<IFormFile> files)
 		{
 			var USER = _userManager.GetUserAsync(User).Result;
 			var images = _Context.ImageList.Where(i => i.OfferId == body.Id).ToList();
@@ -316,20 +315,6 @@ namespace BookingApp.Controllers
 			_Context.SaveChanges();			
 			return RedirectToAction("Index", "Home");
 		}
-		[HttpPost]
-		[Authorize]
-		public IActionResult DeletePhoto(int imageId, Offer body)
-		{
-			var image = _Context.ImageList.FirstOrDefault(i => i.id == imageId);
-			if (image != null)
-			{
-				
-				_Context.ImageList.Remove(_Context.ImageList.FirstOrDefault(i => i.id == imageId));
-				_Context.SaveChanges();
-				return RedirectToAction("EditOffer", "Home", new { id = body.Id });
-			}
-
-			return RedirectToAction("EditOffer", "Home", new { id = body.Id });
-		}
+		
 	}
 }

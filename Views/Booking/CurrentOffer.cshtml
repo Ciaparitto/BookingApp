@@ -41,6 +41,7 @@
 @if(ViewBag.CanEdit)
 {
     <button class="button"onclick="window.location.href='@Url.Action("EditOffer", "Booking", new {offerId = Model.Id})'">Edytuj</button>
+    <button class="button" onclick="window.location.href='@Url.Action("DeleteOffer", "Booking", new {OfferId = Model.Id})'">Usun</button>
 }
 <h1>@Model.title</h1>
 <p>Cena: @Model.price</p>

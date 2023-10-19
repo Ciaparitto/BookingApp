@@ -2,15 +2,11 @@ using BookingApp;
 using BookingApp.Models;
 using BookingApp.Services;
 using BookingApp.Services.Interfaces;
-using BookingApp.Sieve;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
-using Sieve.Models;
-using Sieve.Services;
-using Sieve;
 using Swashbuckle.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,9 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<ISieveProcessor, AppSieveProcessor>();
 builder.Services.AddScoped<IOfferService, OfferService>();
-builder.Services.AddSingleton<AppSieveProcessor>();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.Configure<FormOptions>(options =>
@@ -46,9 +40,9 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login"; // Œcie¿ka do strony logowania
-        options.AccessDeniedPath = "/Account/AccessDenied"; // Œcie¿ka do strony odrzucenia dostêpu
-        options.LogoutPath = "/Account/Logout"; // Œcie¿ka do strony wylogowania
+        options.LoginPath = "/Account/Login"; 
+        options.AccessDeniedPath = "/Account/AccessDenied"; 
+        options.LogoutPath = "/Account/Logout";
     });
 
 
