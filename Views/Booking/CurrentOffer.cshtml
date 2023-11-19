@@ -4,7 +4,7 @@
         font-family: Arial;
     }
 
-    .button {
+    .button, .buttonEdit {
         padding: 10px 20px;
         background-color: rgb(51,100,255);
         color: white;
@@ -15,8 +15,21 @@
         text-align: center;
         height:50px;
         width:150px;
+        
     }
-
+    .buttonEdit{
+        margin:10px;
+    }
+    .ImageContainer {
+        width: 100%;
+        max-height: 550px;
+        overflow-y: hidden;
+        overflow-y: auto;
+        float:left;
+        display:flex;
+        word-wrap: break-word;
+        margin:30px;
+    }
     input[type="text"], input[type="date"] {
         background-color: rgb(51,100,255);
         border: none;
@@ -27,7 +40,7 @@
     .image{
         background-color: rgb(51,100,255);
         border-radius: 20px;
-        padding: 20px;
+        padding: 3px;
         height:500px;
         width:500px;
         float:left;
@@ -37,11 +50,21 @@
         text-align:center;
     }
 
+    ::-webkit-scrollbar {
+        width: 12px;
+        background-color: rgba(0,0,0,0);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        width: 12px;
+        background-color: rgb(51,100,255);
+        border-radius: 15px;
+    }
   </style>
 @if(ViewBag.CanEdit)
 {
-    <button class="button"onclick="window.location.href='@Url.Action("EditOffer", "Booking", new {offerId = Model.Id})'">Edytuj</button>
-    <button class="button" onclick="window.location.href='@Url.Action("DeleteOffer", "Booking", new {OfferId = Model.Id})'">Usun</button>
+    <button class="buttonEdit"onclick="window.location.href='@Url.Action("EditOffer", "Booking", new {offerId = Model.Id})'">Edytuj</button>
+    <button class="buttonEdit" onclick="window.location.href='@Url.Action("DeleteOffer", "Booking", new {OfferId = Model.Id})'">Usun</button>
 }
 <h1>@Model.title</h1>
 <p>Cena: @Model.price</p>
@@ -90,6 +113,7 @@
 		<p>daty nie sa wolne</p>
 	}
 }
+<div class="ImageContainer">
 @if(Model.Images != null)
 {
 
@@ -101,3 +125,4 @@
 	<img class="image" src="~/images/DefaultPhoto.png" alt="Obraz" />
 
 }
+</div>
